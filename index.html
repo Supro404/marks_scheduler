@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Test Submission</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 60%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Mock Test Submission</h1>
+
+<form id="submissionForm">
+    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+    <input type="number" id="marks" name="marks" placeholder="Enter your marks" required>
+    <input type="submit" value="Submit">
+</form>
+
+<table id="rankTable">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Marks</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+</table>
+
+<script>
+    document.getElementById('submissionForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const marks = document.getElementById('marks').value;
+        
+        if (name && !isNaN(marks)) {
+            const student = { name: name, marks: parseFloat(marks) };
+            let students = JSON.parse(localStorage.getItem('students')) || [];
+            students.push(student);
+            localStorage.setItem('students', JSON.stringify(students));
+            alert('Submission successful!');
+            this.reset();
+            displayRankList();
+        } else {
+            alert('Please enter valid name and marks.');
+        }
+    });
+
+    function displayRankList() {
+        const students = JSON.parse(localStorage.getItem('students')) || [];
+        students.sort((a, b) => b.marks - a.marks);
+
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+        
+        students.forEach((student, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${student.name}</td>
+                <td>${student.marks}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    window.onload = displayRankList;
+</script>
+
+</body>
+</html>
